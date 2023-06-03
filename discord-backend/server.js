@@ -12,5 +12,7 @@ app.use(express.json());
 const server = http.createServer(app);
 
 server.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT} in ${process.env.MODE} mode`);
+  console.log(
+    `Server is listening on port ${PORT} in ${process.env.MODE} mode`
+  );
 });
