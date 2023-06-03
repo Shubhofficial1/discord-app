@@ -1,6 +1,6 @@
 import express from "express";
 import http from "http";
-import mongoose, { mongo } from "mongoose";
+import colors from "colors";
 import dotenv from "dotenv";
 dotenv.config();
 import connectDB from "./config/db.js";
@@ -14,6 +14,6 @@ const server = http.createServer(app);
 
 server.listen(PORT, () => {
   console.log(
-    `Server is listening on port ${PORT} in ${process.env.MODE} mode`
+    `Server running in ${process.env.MODE} mode on port ${PORT}`.yellow.bold
   );
 });
