@@ -1,0 +1,23 @@
+{
+  "name": "discord-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "An chat app that will have functionalities like audio/video calls/chats",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Shubham Kumar",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.1.3",
+    "express": "^4.18.2",
+    "express-joi-validator": "^2.0.1",
+    "joi": "^17.9.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.2.2",
+    "nodemon": "^2.0.22"
+  }
+}
