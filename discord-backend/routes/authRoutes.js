@@ -3,6 +3,7 @@ const router = express.Router();
 import { loginUser, registerUser } from "../controllers/authController.js";
 import Joi from "joi";
 import { createValidator } from "express-joi-validation";
+import auth from "../middlewares/authMiddleware.js";
 
 const validator = createValidator();
 
@@ -20,5 +21,9 @@ const loginSchema = Joi.object({
 router.route("/register").post(validator.body(registerSchema), registerUser);
 
 router.route("/login").post(validator.body(loginSchema), loginUser);
+
+router.route("/test").get(auth, (req, res) => {
+  res.send("Protected route");
+});
 
 export default router;

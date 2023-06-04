@@ -1,42 +1,44 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
-// @desc    Register user & get token
+// @desc    Register user
 // @route   POST /api/auth/register
 // @access  Public
 const registerUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
-    // Check if user already exists
-
     const existsUser = await User.exists({ email: email.toLowerCase() });
-    // if yes , send a 409(conflict) response & respective message
 
     if (existsUser) {
       res.status(409).send("Email already in use.");
     }
 
-    // if no , encrypt the password
-
     const encryptedPassword = await bcrypt.hash(password, 10);
 
-    // create user document & save in database
     const user = await User.create({
       username,
       email: email.toLowerCase(),
       password: encryptedPassword,
     });
-    // create jwt token
-    const token = "JWT Token";
 
-    // send the response to client
+    const token = jwt.sign(
+      {
+        userId: user._id,
+        email: user.email,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "24h",
+      }
+    );
 
     if (user) {
       res.status(201).json({
         userDetails: {
-          email: user.email,
           username: user.username,
+          email: user.email,
           token: token,
         },
       });
@@ -51,7 +53,35 @@ const registerUser = async (req, res) => {
 // @route   POST /api/auth/login
 // @access  Public
 const loginUser = async (req, res) => {
-  res.send("Login Route...");
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email: email.toLowerCase() });
+
+    if (user && (await bcrypt.compare(password, user.password))) {
+      const token = jwt.sign(
+        {
+          userId: user._id,
+          email: user.email,
+        },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "24h",
+        }
+      );
+
+      return res.status(200).json({
+        userDetails: {
+          username: user.username,
+          email: user.email,
+          token: token,
+        },
+      });
+    }
+    return res.status(400).send("Invalid Credentials , please try again !");
+  } catch (error) {
+    res.status(500).send("Something went wrong . try again !");
+  }
 };
 
 export { loginUser, registerUser };
